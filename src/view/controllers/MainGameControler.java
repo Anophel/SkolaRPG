@@ -95,11 +95,6 @@ public class MainGameControler implements Initializable
 				canvas.setWidth(pane.getWidth());
 				canvas.setHeight(pane.getHeight());
 				
-				if(canvas.getWidth() == 0)
-				{
-					System.out.println("lask");
-				}
-				
 				double ubehlyCas = (present - last) / 1.0E14;
 				last = (long) ubehlyCas;
 				

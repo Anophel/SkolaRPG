@@ -83,6 +83,14 @@ public class Map extends Animated
 	{
 		return vodorovne;
 	}
+	public double getVodorovnyPrechod()
+	{
+		return pozice.getYPoz()+pozadi.getHeight();
+	}
+	public double getVertikalniPrechod()
+	{
+		return pozice.getXPoz()+image.getWidth();
+	}
 	@Override
 	public void update(double time, Canvas canvas)
 	{
@@ -123,9 +131,6 @@ public class Map extends Animated
 		{
 			gt.drawImage(image, pozice.getXPoz(), pozice.getYPoz()+pozadi.getHeight());
 			gt.drawImage(pozadi, pozice.getXPoz(), pozice.getYPoz());
-			
-			
-			
 		}
 		else
 		{
