@@ -1,6 +1,7 @@
 package view.animation;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import model.Pozice;
 
 public class Map extends Animated
@@ -13,25 +14,44 @@ public class Map extends Animated
 	private boolean YborderHit;
 	
 	private static final ImageWithSource IMAGE = new ImageWithSource("/view/img/chodba.png");
+	private static final ImageWithSource POZADI = new ImageWithSource("/view/img/chodba.png");
+	private static final boolean VODOROVNE = true;
 	private static final Pozice POZICE = new Pozice(0,0);
+	
+	private ImageWithSource pozadi;
+	private boolean vodorovne;
 	
 	public Map()
 	{
-		this(IMAGE);
+		this(IMAGE, POZADI, VODOROVNE);
 	}
-	public Map(ImageWithSource image)
+	public Map(ImageWithSource image, ImageWithSource pozadi, boolean vodorovnePozadi)
 	{
-		this(image,POZICE);
+		this(image, pozadi, vodorovnePozadi, POZICE);
 	}
-	public Map(ImageWithSource image, Pozice pozice)
+	public Map(ImageWithSource image, ImageWithSource pozadi, boolean vodorovnePozadi, Pozice pozice)
 	{
 		this.image = image;
+		this.pozadi = pozadi;
+		this.vodorovne = vodorovnePozadi;
 		this.pozice = pozice;
 	}
 	private void setBorders(Canvas canvas)
 	{
-		this.Xborder = -image.getWidth()+canvas.getWidth();
-		this.Yborder = -image.getHeight()+canvas.getHeight();
+		/*
+		 * Pokud je orientace vodorovná, nachází se pozadí nad mapou a rošiøuje ji do výšky,
+		 * pokud je orientace nevodorovná, nachází se pozadí vpravo a rozšiøuje mapu do šíøky.
+		 */
+		if(vodorovne)
+		{
+			Xborder = canvas.getWidth()-image.getWidth();
+			Yborder = canvas.getHeight()-(image.getHeight()+pozadi.getHeight());
+		}
+		else
+		{
+			Xborder = canvas.getWidth()-(image.getWidth()+pozadi.getWidth());
+			Yborder = canvas.getHeight()-image.getHeight();
+		}
 		XborderHit = false;
 		YborderHit = false;
 	}
@@ -51,6 +71,19 @@ public class Map extends Animated
 	{
 		return Yborder;
 	}
+	public ImageWithSource getPozadiImage()
+	{
+		return pozadi;
+	}
+	public void setPozadiImage(ImageWithSource img)
+	{
+		this.pozadi = img;
+	}
+	public boolean getVodorovnePozadi()
+	{
+		return vodorovne;
+	}
+	@Override
 	public void update(double time, Canvas canvas)
 	{
 		double newX = pozice.getXPoz();
@@ -82,5 +115,19 @@ public class Map extends Animated
 		}
 
 		setPozice(new Pozice(newX,newY));
+	}
+	@Override
+	public void render(GraphicsContext gt)
+	{
+		if(vodorovne)
+		{
+			gt.drawImage(image, pozice.getXPoz(), pozice.getYPoz()+pozadi.getHeight());
+			gt.drawImage(pozadi, pozice.getXPoz(), pozice.getYPoz());
+		}
+		else
+		{
+			gt.drawImage(image, pozice.getXPoz(), pozice.getYPoz());
+			gt.drawImage(pozadi, pozice.getXPoz()+image.getWidth(), pozice.getYPoz());
+		}
 	}
 }

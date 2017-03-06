@@ -263,9 +263,7 @@ public class MainGameControler implements Initializable
 				{
 					entities.remove(intersectionist);
 				}
-			}
-
-		
+			}		
 		}.start();
 	}
 	public void setHrac(Hrac hrac)

@@ -14,7 +14,6 @@ import model.characters.NPC;
 import model.characters.Postava;
 import view.animation.Avatar;
 import view.animation.Enemy;
-import view.animation.ImageWithSource;
 import view.animation.Map;
 import view.controllers.MainGameControler;
 
@@ -49,7 +48,7 @@ public class Main extends Application
 		hrac.setAnimatedCharacter(avatar);
 		
 		//tvorba mapy
-		Map map = new Map(new ImageWithSource("/view/img/chodba.png"), new Pozice(0,0));
+		Map map = new Map();
 		
 		//tvorba nepøátel
 		ArrayList<Postava> enemies = new ArrayList<Postava>();
