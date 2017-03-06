@@ -352,7 +352,8 @@ public class MainGameControler implements Initializable
 		{
 			input.add(code);
 		}
-	}	private void keyReleased(KeyEvent e)
+	}	
+	private void keyReleased(KeyEvent e)
 	{
 		String code = e.getCode().toString();
 		input.remove(code);
