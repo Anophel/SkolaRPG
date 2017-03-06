@@ -123,6 +123,9 @@ public class Map extends Animated
 		{
 			gt.drawImage(image, pozice.getXPoz(), pozice.getYPoz()+pozadi.getHeight());
 			gt.drawImage(pozadi, pozice.getXPoz(), pozice.getYPoz());
+			
+			
+			
 		}
 		else
 		{
