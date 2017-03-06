@@ -1,0 +1,12 @@
+#transparent
+{
+	-fx-background-color: transparent;
+}
+#countdown
+{
+	-fx-background-color: rgb(170,170,170);
+	-fx-border-color: black;
+	-fx-text-fill: rgb(180,30,30);
+	-fx-font-weight: bold;
+	-fx-font-size: 30px;
+}
