@@ -56,6 +56,8 @@ public class MainGameControler implements Initializable
 	private Canvas canvas = new Canvas();	//slouží jako plátno pro vykreslování
 	
 	private Scene scene;
+	
+	private boolean firstRun = true;
 
 	/*
 	 * 					READ ME!!!
@@ -87,6 +89,9 @@ public class MainGameControler implements Initializable
 		
 		Avatar avatar = (Avatar) hrac.getAnimatedCharacter();
 		
+		canvas.setWidth(pane.getWidth());
+		canvas.setHeight(pane.getHeight());
+		
 		new AnimationTimer()
 		{
 			@Override
@@ -95,7 +100,7 @@ public class MainGameControler implements Initializable
 				canvas.setWidth(pane.getWidth());
 				canvas.setHeight(pane.getHeight());
 				
-				double ubehlyCas = (present - last) / 1.0E14;
+				double ubehlyCas = (present - last) / 1.0E15;
 				last = (long) ubehlyCas;
 				
 				setVelocity();	//nastavení rychlosti (pøechodnì mapì)
@@ -103,6 +108,12 @@ public class MainGameControler implements Initializable
 				setAnimation(ubehlyCas);	//nastavení animace
 				
 				setAvatarVelocity();	//nastaví rychlost avatara
+				
+				if(firstRun)
+				{
+					avatar.center(canvas);
+					firstRun = false;
+				}
 				
 				//aplikace zmìn avatara				
 				if(avatar.getXvelocity() != 0 || avatar.getYvelocity() != 0)
@@ -133,19 +144,19 @@ public class MainGameControler implements Initializable
 				map.setVelocity(0, 0);
 				if(input.contains("A"))
 				{
-					map.addVelocity(3, 0);
+					map.addVelocity(8, 0);
 				}
 				if(input.contains("D"))
 				{
-					map.addVelocity(-3, 0);
+					map.addVelocity(-8, 0);
 				}
 				if(input.contains("W"))
 				{
-					map.addVelocity(0, 3);
+					map.addVelocity(0, 8);
 				}
 				if(input.contains("S"))
 				{
-					map.addVelocity(0, -3);
+					map.addVelocity(0, -8);
 				}
 			}
 			private void setAnimation(double ubehlyCas) //nastaví animaci avatara
@@ -189,20 +200,27 @@ public class MainGameControler implements Initializable
 				{
 					avatar.addVelocity(0,-map.getYvelocity());
 				}
+				if(map.intersectsWithBackground(avatar))
+				{
+					avatar.setVelocity(map.getXvelocity(),map.getYvelocity());
+				}
 			}
 			private void setMapVelocity() //nastaví rychlost mapì
 			{
-				if(avatar.outOfCenterX(canvas) && avatar.outOfCenterY(canvas))
+				if(!map.intersectsWithBackground(avatar))
 				{
-					map.setVelocity(0, 0);
-				}
-				else if(avatar.outOfCenterX(canvas))
-				{
-					map.setVelocity(0, map.getYvelocity());
-				}
-				else if(avatar.outOfCenterY(canvas))
-				{
-					map.setVelocity(map.getXvelocity(), 0);
+					if(avatar.outOfCenterX(canvas) && avatar.outOfCenterY(canvas))
+					{
+						map.setVelocity(0, 0);
+					}
+					else if(avatar.outOfCenterX(canvas))
+					{
+						map.setVelocity(0, map.getYvelocity());
+					}
+					else if(avatar.outOfCenterY(canvas))
+					{
+						map.setVelocity(map.getXvelocity(), 0);
+					}
 				}
 			}
 			private void setOthersVelocityAndUpdate(double time)

@@ -62,7 +62,7 @@ public abstract class Animated
 		
 		image = new ImageWithSource(url,width,height,false,true);
 	}
-	public boolean intersectsWith(AnimatedCharacter other)
+	public boolean intersectsWith(Animated other)
 	{
 		/*			 My			Other	
 		 * 				
