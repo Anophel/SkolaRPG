@@ -43,6 +43,9 @@ public class RunningText extends AnimationTimer{
 	 * @param waitTime
 	 */
 	public RunningText(String originalText, GraphicsContext gc, int startX, int startY, int width, int height, int waitTime){
+		if(width <= 0 || height <= 0){
+			throw new IllegalArgumentException("Width or height cannot be negative.");
+		}
 		this.originalText = originalText;
 		this.gc = gc;
 		this.startX = startX;
