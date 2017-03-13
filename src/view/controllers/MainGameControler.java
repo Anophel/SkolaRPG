@@ -222,6 +222,10 @@ public class MainGameControler implements Initializable
 						map.setVelocity(map.getXvelocity(), 0);
 					}
 				}
+				else
+				{
+					//nothing?
+				}
 			}
 			private void setOthersVelocityAndUpdate(double time)
 			{
