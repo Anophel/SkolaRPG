@@ -17,8 +17,6 @@ import javafx.scene.canvas.GraphicsContext;
 import model.characters.Characters;
 
 public class Dialogue extends Canvas{
-
-	private int waitTime = 300;
 	
 	// Avatar position
 	private int xAvatar = 10;
@@ -34,6 +32,7 @@ public class Dialogue extends Canvas{
 	private AnimationTimer timer;
 	
 	public Dialogue(Dialogues dial, int width, int height){
+		super(width, height);
 		try {
 	         File inputFile = new File(dial.getPath());
 	         DocumentBuilderFactory dbFactory = 
@@ -67,23 +66,26 @@ public class Dialogue extends Canvas{
 	      }
 		
 		timer = new AnimationTimer(){
-			long last = 0;
-			long now = 1;
 			int index = 0;
+			
 			RunningText text = null;
+			
 			@Override
 			public void handle(long arg0) {
-				now = System.nanoTime();
-				if((now - last) > waitTime){
-					if(text != null && !text.isRunning()){
+				if(text == null || !text.isRunning()){
+					if(index < speeches.size()){
 						text = renderSpeech(index);
 						index++;
+					} else {
+						this.stop();
 					}
 				}
 			}
 		};
-		
-		super.resize(width, height);
+	}
+	
+	public void start(){
+		timer.start();
 	}
 	
 	private RunningText renderSpeech(int index){
@@ -92,6 +94,7 @@ public class Dialogue extends Canvas{
 	
 	private RunningText renderSpeech(Speech speech){
 		GraphicsContext gc = super.getGraphicsContext2D();
+		gc.clearRect(0, 0, super.getWidth(), super.getWidth());
 		RunningText text = new RunningText(speech.getText(), gc, (int)(xAvatar + super.getWidth() * percentAvatarWidth + xGapFromAvatar), yRunningText, (int)((1-percentAvatarWidth)*super.getWidth()), (int)((1-percentAvatarHeight)*super.getHeight()));
 		gc.drawImage(speech.getAvatar(), xAvatar, yAvatar, super.getWidth() * percentAvatarWidth, super.getHeight() * percentAvatarHeight);
 		text.start();

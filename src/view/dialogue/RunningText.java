@@ -9,8 +9,9 @@ public class RunningText extends AnimationTimer{
 	
 	// Casove udaje
 	private long last = System.nanoTime();
-	private int waitTime = 100;
+	private int waitTimeBetweenLetters = 100;
 	private boolean running = false;
+	private int waitTimeAtTheEnd = 500;
 	
 	// Textove udaje
 	private int index = 0;
@@ -53,7 +54,7 @@ public class RunningText extends AnimationTimer{
 		this.startY = startY;
 		this.width = width;
 		this.height = height;
-		this.waitTime = waitTime;
+		this.waitTimeBetweenLetters = waitTime;
 	}
 	
 	/**
@@ -75,8 +76,7 @@ public class RunningText extends AnimationTimer{
 	
 	@Override
 	public void handle(long now) {
-		running = true;
-		if((now - last) > waitTime){ // Zkontroluje, zda už mùže pøidat další písmeno
+		if((now - last) > waitTimeBetweenLetters){ // Zkontroluje, zda už mùže pøidat další písmeno
 			last = now;
 			
 			if(index < originalText.length()){ // Zkontroluje, zda nedojel do konce
@@ -98,12 +98,32 @@ public class RunningText extends AnimationTimer{
 				gc.fillText(shownText, startX+verticalPadding, startY+horizontalPadding, width-2*verticalPadding);
 			} else {
 				this.stop();
-				running = false;
 			}
 			index++;
 		}
 	}
 	
+	@Override
+	public void start(){
+		running = true;
+		super.start();
+	}
+	
+	/**
+	 *  Animation timer ses ukonèí hned po zavolání této metody, ale bude ještì èekat waitTimeAtTheEnd, než se zobrazí
+	 *  jako že už nebìží
+	 */
+	public void stop(){
+		super.stop();
+		try {
+			Thread.sleep(waitTimeAtTheEnd);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		running = false;
+	}
+	
+	// Kontroluju jestli text už dobìhl
 	public boolean isRunning() {
 		return running;
 	}
