@@ -1,8 +1,10 @@
 package view.dialogue;
 
+import app.Main;
+
 public enum Dialogues {
 
-	first("test/path/dialogue1.di");
+	test(Main.class.getResource("/view/dialogue/data/testDialogue.xml").getFile());
 	
 	private String path;
 	

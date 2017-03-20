@@ -10,6 +10,7 @@ public class RunningText extends AnimationTimer{
 	// Casove udaje
 	private long last = System.nanoTime();
 	private int waitTime = 100;
+	private boolean running = false;
 	
 	// Textove udaje
 	private int index = 0;
@@ -74,6 +75,7 @@ public class RunningText extends AnimationTimer{
 	
 	@Override
 	public void handle(long now) {
+		running = true;
 		if((now - last) > waitTime){ // Zkontroluje, zda už mùže pøidat další písmeno
 			last = now;
 			
@@ -96,11 +98,16 @@ public class RunningText extends AnimationTimer{
 				gc.fillText(shownText, startX+verticalPadding, startY+horizontalPadding, width-2*verticalPadding);
 			} else {
 				this.stop();
+				running = false;
 			}
 			index++;
 		}
 	}
 	
+	public boolean isRunning() {
+		return running;
+	}
+
 	/**
 	 * Vypoèítává velikost textu s urèitým fontem.
 	 * 
