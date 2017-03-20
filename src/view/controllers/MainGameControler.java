@@ -53,6 +53,7 @@ public class MainGameControler implements Initializable
 	private Map map;			//pozadí, po kterém se pohybujeme
 	private ArrayList<String> input = new ArrayList<String>();	//udržuje informaci o stisknutých klávesách
 	private long last;	//udržuje informaci o tom, kdy probìhl poslední update
+	private long now;
 	private Canvas canvas = new Canvas();	//slouží jako plátno pro vykreslování
 	
 	private Scene scene;
@@ -81,6 +82,7 @@ public class MainGameControler implements Initializable
 		pane.getChildren().add(canvas);
 		
 		last = System.nanoTime();
+		now = System.nanoTime();
 		
 		pane.getScene().setOnKeyPressed(e -> keyPressed(e));
 		pane.getScene().setOnKeyReleased(e -> keyReleased(e));
@@ -97,11 +99,13 @@ public class MainGameControler implements Initializable
 			@Override
 			public void handle(long present) 
 			{
+				now = System.nanoTime();
+				
 				canvas.setWidth(pane.getWidth());
 				canvas.setHeight(pane.getHeight());
 				
-				double ubehlyCas = (present - last) / 1.0E15;
-				last = (long) ubehlyCas;
+				double ubehlyCas = (now - last) / 10e6;
+				last = now;
 				
 				setVelocity();	//nastavení rychlosti (pøechodnì mapì)
 				
