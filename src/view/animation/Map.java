@@ -3,6 +3,7 @@ package view.animation;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import model.Pozice;
+import model.Vektor;
 import view.animation.ImageWithSource;
 import view.animation.Animated;
 
@@ -15,8 +16,10 @@ public class Map extends Animated
 	private boolean XborderHit;
 	private boolean YborderHit;
 	
-	private static final ImageWithSource IMAGE = new ImageWithSource("/view/img/chodba.png");
-	private static final ImageWithSource POZADI = new ImageWithSource("/view/img/pozadi.png");
+	private Vektor lastChange = new Vektor(0,0);
+	
+	private static final ImageWithSource IMAGE = new ImageWithSource("/view/img/chodba1.png");
+	private static final ImageWithSource POZADI = new ImageWithSource("/view/img/pozadi1.png");
 	private static final boolean VODOROVNE = true;
 	private static final Pozice POZICE = new Pozice(0,0);
 	
@@ -93,6 +96,14 @@ public class Map extends Animated
 	{
 		return pozice.getXPoz()+image.getWidth();
 	}
+	private void setLastChange(double X, double Y)
+	{
+		lastChange = new Vektor(X,Y);
+	}
+	public Vektor getLastChange()
+	{
+		return lastChange;
+	}
 	public boolean intersectsWithBackground(Animated animated)
 	{
 		if(vodorovne)
@@ -149,6 +160,7 @@ public class Map extends Animated
 			YborderHit = true;
 		}
 
+		setLastChange(newX-pozice.getXPoz(),newY-pozice.getYPoz());
 		setPozice(new Pozice(newX,newY));
 	}
 	@Override

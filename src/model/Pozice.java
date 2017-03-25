@@ -37,6 +37,11 @@ public class Pozice
 	{
 		return new Pozice(this);
 	}
+	public void plus(Vektor v)
+	{
+		this.xPoz += v.getX();
+		this.yPoz += v.getY();
+	}
 	@Override
 	public String toString()
 	{

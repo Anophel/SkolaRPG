@@ -44,25 +44,25 @@ public class Main extends Application
 		//tvorba hráèe a avatara
 		Hrac hrac = new Hrac();
 		Avatar avatar = new Avatar(Characters.HERO);
-		avatar.setPozice(new Pozice(600,300));
+		avatar.setPozice(new Pozice(0,300));
 		hrac.setAnimatedCharacter(avatar);
 		
 		//tvorba mapy
 		Map map = new Map();
-		map.setPozice(new Pozice(-300,-3000));
+		map.setPozice(new Pozice(0, -400));
 		
 		//tvorba nepøátel
 		ArrayList<Postava> enemies = new ArrayList<Postava>();
 		//tvorba nepøátel - 1 
 		NPC npc = new NPC("Redman");
 		Enemy enemy = new Enemy(Characters.REDMAN);
-		enemy.setPozice(new Pozice(3000,400));
+		enemy.setPozice(new Pozice(1000,200));
 		enemy.setImageSize(300, 300);
 		npc.setAnimatedCharacter(enemy);
 		//tvorba nepøátel - 2
 		NPC npc2 = new NPC("Blonde");
 		Enemy enemy2 = new Enemy(Characters.BLONDE);
-		enemy2.setPozice(new Pozice(2900, 550));
+		enemy2.setPozice(new Pozice(2900, 100));
 		enemy2.setImageSize(300, 300);
 		npc2.setAnimatedCharacter(enemy2);
 		
