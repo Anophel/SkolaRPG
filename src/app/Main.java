@@ -57,13 +57,13 @@ public class Main extends Application
 		NPC npc = new NPC("Redman");
 		Enemy enemy = new Enemy(Characters.REDMAN);
 		enemy.setPozice(new Pozice(1000,200));
-		enemy.setImageSize(300, 300);
+		enemy.setImageSize(400, 400);
 		npc.setAnimatedCharacter(enemy);
 		//tvorba nepøátel - 2
 		NPC npc2 = new NPC("Blonde");
 		Enemy enemy2 = new Enemy(Characters.BLONDE);
 		enemy2.setPozice(new Pozice(2900, 100));
-		enemy2.setImageSize(300, 300);
+		enemy2.setImageSize(400, 400);
 		npc2.setAnimatedCharacter(enemy2);
 		
 		enemies.add(npc);

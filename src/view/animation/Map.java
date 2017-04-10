@@ -18,8 +18,8 @@ public class Map extends Animated
 	
 	private Vektor lastChange = new Vektor(0,0);
 	
-	private static final ImageWithSource IMAGE = new ImageWithSource("/view/img/chodba1.png");
-	private static final ImageWithSource POZADI = new ImageWithSource("/view/img/pozadi1.png");
+	private static final ImageWithSource IMAGE = new ImageWithSource("/view/img/chodba.png");
+	private static final ImageWithSource POZADI = new ImageWithSource("/view/img/pozadi.png");
 	private static final boolean VODOROVNE = true;
 	private static final Pozice POZICE = new Pozice(0,0);
 	
