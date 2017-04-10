@@ -3,6 +3,9 @@ package view.animation;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import model.Pozice;
+import model.Vektor;
+import view.animation.ImageWithSource;
+import view.animation.Animated;
 
 public class Map extends Animated
 {	
@@ -13,8 +16,10 @@ public class Map extends Animated
 	private boolean XborderHit;
 	private boolean YborderHit;
 	
+	private Vektor lastChange = new Vektor(0,0);
+	
 	private static final ImageWithSource IMAGE = new ImageWithSource("/view/img/chodba.png");
-	private static final ImageWithSource POZADI = new ImageWithSource("/view/img/chodba.png");
+	private static final ImageWithSource POZADI = new ImageWithSource("/view/img/pozadi.png");
 	private static final boolean VODOROVNE = true;
 	private static final Pozice POZICE = new Pozice(0,0);
 	
@@ -91,6 +96,39 @@ public class Map extends Animated
 	{
 		return pozice.getXPoz()+image.getWidth();
 	}
+	private void setLastChange(double X, double Y)
+	{
+		lastChange = new Vektor(X,Y);
+	}
+	public Vektor getLastChange()
+	{
+		return lastChange;
+	}
+	public boolean intersectsWithBackground(Animated animated)
+	{
+		if(vodorovne)
+		{
+			if(animated.getPozice().getYPoz()<(pozice.getYPoz()+pozadi.getHeight()))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			if(animated.getPozice().getXPoz()>(pozice.getXPoz()-pozadi.getWidth()))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
 	@Override
 	public void update(double time, Canvas canvas)
 	{
@@ -122,6 +160,7 @@ public class Map extends Animated
 			YborderHit = true;
 		}
 
+		setLastChange(newX-pozice.getXPoz(),newY-pozice.getYPoz());
 		setPozice(new Pozice(newX,newY));
 	}
 	@Override
@@ -129,6 +168,7 @@ public class Map extends Animated
 	{
 		if(vodorovne)
 		{
+			
 			gt.drawImage(image, pozice.getXPoz(), pozice.getYPoz()+pozadi.getHeight());
 			gt.drawImage(pozadi, pozice.getXPoz(), pozice.getYPoz());
 		}

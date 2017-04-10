@@ -19,6 +19,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Vektor;
+import model.characters.Characters;
 import model.characters.Hrac;
 import model.characters.Postava;
 import model.items.INositelne;
@@ -53,7 +55,9 @@ public class MainGameControler implements Initializable
 	private Map map;			//pozadí, po kterém se pohybujeme
 	private ArrayList<String> input = new ArrayList<String>();	//udržuje informaci o stisknutých klávesách
 	private long last;	//udržuje informaci o tom, kdy probìhl poslední update
+	private long now;	//momentální èas
 	private Canvas canvas = new Canvas();	//slouží jako plátno pro vykreslování
+	private Vektor vektor = new Vektor(0,0);	//popisuje smìr pohybu mapy
 	
 	private Scene scene;
 
@@ -79,6 +83,7 @@ public class MainGameControler implements Initializable
 		pane.getChildren().add(canvas);
 		
 		last = System.nanoTime();
+		now = System.nanoTime();
 		
 		pane.getScene().setOnKeyPressed(e -> keyPressed(e));
 		pane.getScene().setOnKeyReleased(e -> keyReleased(e));
@@ -87,22 +92,27 @@ public class MainGameControler implements Initializable
 		
 		Avatar avatar = (Avatar) hrac.getAnimatedCharacter();
 		
+		canvas.setWidth(pane.getWidth());
+		canvas.setHeight(pane.getHeight());
+		
 		new AnimationTimer()
 		{
 			@Override
 			public void handle(long present) 
 			{
+				now = System.nanoTime();
+				
 				canvas.setWidth(pane.getWidth());
 				canvas.setHeight(pane.getHeight());
 				
-				double ubehlyCas = (present - last) / 1.0E14;
-				last = (long) ubehlyCas;
+				double ubehlyCas = (now - last) / 10e6;
+				last = now;
 				
 				setVelocity();	//nastavení rychlosti (pøechodnì mapì)
 				
 				setAnimation(ubehlyCas);	//nastavení animace
 				
-				setAvatarVelocity();	//nastaví rychlost avatara
+				setAvatarVelocity(ubehlyCas);	//nastaví rychlost avatara
 				
 				//aplikace zmìn avatara				
 				if(avatar.getXvelocity() != 0 || avatar.getYvelocity() != 0)
@@ -117,7 +127,7 @@ public class MainGameControler implements Initializable
 				setMapVelocity();	//pøípadná úprava rychlosti mapy
 				map.update(ubehlyCas, canvas);	//aplikace zmìn mapy
 				
-				setOthersVelocityAndUpdate(ubehlyCas);
+				updateOthers(ubehlyCas);
 				
 				//render
 				gt.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -130,29 +140,29 @@ public class MainGameControler implements Initializable
 			}
 			private void setVelocity() //nastavuje rychlost podle stisknutých kláves
 			{
-				map.setVelocity(0, 0);
+				vektor.set(new Vektor(0,0));
 				if(input.contains("A"))
 				{
-					map.addVelocity(3, 0);
+					vektor.addX(8);
 				}
 				if(input.contains("D"))
 				{
-					map.addVelocity(-3, 0);
+					vektor.addX(-8);
 				}
 				if(input.contains("W"))
 				{
-					map.addVelocity(0, 3);
+					vektor.addY(8);
 				}
 				if(input.contains("S"))
 				{
-					map.addVelocity(0, -3);
+					vektor.addY(-8);
 				}
 			}
 			private void setAnimation(double ubehlyCas) //nastaví animaci avatara
 			{
-				if(map.getXvelocity() != 0) //pokud se hýbe po X
+				if(vektor.getX() != 0) //pokud se hýbe po X
 				{
-					if(map.getXvelocity()>0)	//pokud se hýbe smìrem vlevo
+					if(vektor.getX()>0)	//pokud se hýbe smìrem vlevo
 					{
 						avatar.left(ubehlyCas);
 					}
@@ -161,9 +171,9 @@ public class MainGameControler implements Initializable
 						avatar.right(ubehlyCas);
 					}
 				}
-				else if(map.getYvelocity() != 0) //pokud se hýbe po Y
+				else if(vektor.getY() != 0) //pokud se hýbe po Y
 				{
-					if(map.getYvelocity()>0)	//pohybuje se nahoru
+					if(vektor.getY()>0)	//pohybuje se nahoru
 					{
 						avatar.up(ubehlyCas);
 					}
@@ -177,40 +187,60 @@ public class MainGameControler implements Initializable
 					avatar.relax(ubehlyCas);
 				}
 			}
-			private void setAvatarVelocity() //nastaví rychlost avataru
+			private void setAvatarVelocity(double time) //nastaví rychlost avataru
 			{
 				avatar.setVelocity(0,0);
-				
+
 				if(map.getXborderHit())
 				{
-					avatar.addVelocity(-map.getXvelocity(), 0);
+					avatar.addVelocity(-vektor.getX(), 0);
 				}
 				if(map.getYborderHit())
 				{
-					avatar.addVelocity(0,-map.getYvelocity());
+					avatar.addVelocity(0,-vektor.getY());
+				}
+				if(map.intersectsWithBackground(avatar))	//pokud se protne pozadí s avatarem
+				{
+					if(vektor.getY()>0) //pokud se pohybuje mapa smìrem dolù = avatar nahoru
+					{
+						avatar.setVelocity(avatar.getXvelocity(), vektor.getY());
+					}
+				}
+				
+				if(avatar.outOfCenterX(canvas) && !map.getXborderHit())
+				{
+					avatar.setVelocity(-vektor.getX(), avatar.getYvelocity());
+				}
+				if(avatar.outOfCenterY(canvas) && vektor.getY()>0 && !map.intersectsWithBackground(avatar) && wontIntersect(time))
+				{
+					avatar.setVelocity(avatar.getXvelocity(), -vektor.getY());
 				}
 			}
 			private void setMapVelocity() //nastaví rychlost mapì
 			{
-				if(avatar.outOfCenterX(canvas) && avatar.outOfCenterY(canvas))
+				map.setVelocity(vektor.getX(), vektor.getY());
+				if(avatar.outOfCenterX(canvas))
 				{
-					map.setVelocity(0, 0);
+					map.setVelocity(0, vektor.getY());
 				}
-				else if(avatar.outOfCenterX(canvas))
+				if(avatar.outOfCenterY(canvas))
 				{
-					map.setVelocity(0, map.getYvelocity());
-				}
-				else if(avatar.outOfCenterY(canvas))
-				{
-					map.setVelocity(map.getXvelocity(), 0);
+					if(vektor.getY()>0)
+					{
+						map.setVelocity(map.getXvelocity(), 0);
+					}
+					else if(vektor.getY()<0 && !map.getXborderHit())
+					{
+						map.setVelocity(map.getXvelocity(), vektor.getY());
+					}
 				}
 			}
-			private void setOthersVelocityAndUpdate(double time)
+			private void updateOthers(double time)
 			{
 				for(Postava postava:entities)
 				{
-					postava.getAnimatedCharacter().setVelocity(map.getXvelocity(), map.getYvelocity());
-					postava.getAnimatedCharacter().update(time, canvas);
+					postava.getAnimatedCharacter().setVelocity(0, 0);
+					postava.getAnimatedCharacter().getPozice().plus(map.getLastChange());
 				}
 			}
 			private void renderOthers(GraphicsContext gc)
@@ -222,9 +252,7 @@ public class MainGameControler implements Initializable
 					{
 						return (int) (p0.getAnimatedCharacter().getPozice().getYPoz()-p1.getAnimatedCharacter().getPozice().getYPoz());
 					}
-					
 				});
-				
 				//vykreslit od menšího k vìtšímu Y
 				for(Postava postava:entities)
 				{
@@ -259,6 +287,22 @@ public class MainGameControler implements Initializable
 					entities.remove(intersectionist);
 				}
 			}		
+			private boolean wontIntersect(double time)
+			{
+				Avatar probe = new Avatar(Characters.HERO);
+				probe.setPozice(avatar.getPozice());
+				probe.setVelocity(avatar.getXvelocity(), -vektor.getY());
+				probe.update(time, canvas);
+				
+				if(map.intersectsWithBackground(probe))
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
 		}.start();
 	}
 	public void setHrac(Hrac hrac)

@@ -15,7 +15,7 @@ public abstract class AnimatedCharacter extends Animated
 	private int nextImageID = 1; //jedna, protože po zaèátku už rovno relaxuje a chce naèíst další obázek
 	protected Status status;
 	
-	private static final double delay = 150; //mezera mezi kroky animace
+	private static final double delay = 50; //mezera mezi kroky animace
 	private double lastTime = 0;
 	
 	
