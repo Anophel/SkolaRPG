@@ -14,6 +14,7 @@ import model.characters.NPC;
 import model.characters.Postava;
 import view.animation.Avatar;
 import view.animation.Enemy;
+import view.animation.ImageWithSource;
 import view.animation.Map;
 import view.controllers.MainGameControler;
 
@@ -45,11 +46,15 @@ public class Main extends Application
 		Hrac hrac = new Hrac();
 		Avatar avatar = new Avatar(Characters.HERO);
 		avatar.setPozice(new Pozice(0,300));
+		avatar.setImageSize(400, 400);
 		hrac.setAnimatedCharacter(avatar);
-		
+
 		//tvorba mapy
 		Map map = new Map();
 		map.setPozice(new Pozice(0, -400));
+		
+		Map map2 = new Map(new ImageWithSource("/view/img/podlaha2.png"),new ImageWithSource("/view/img/pozadi2.png"),false);
+		map2.setPozice(new Pozice(map.getImage().getWidth(),-400));
 		
 		//tvorba nepøátel
 		ArrayList<Postava> enemies = new ArrayList<Postava>();
@@ -71,12 +76,12 @@ public class Main extends Application
 		
 		MGC.setHrac(hrac);
 		MGC.setMap(map);
+		MGC.setMap2(map2);
 		MGC.setEntities(enemies);
 		MGC.setStage(jeviste);
 		jeviste.setMaximized(true);
 		
 		jeviste.show();
-		MGC.run();
 	}
 	private void setJeviste(Stage stage)
 	{

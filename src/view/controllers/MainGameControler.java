@@ -19,6 +19,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Pozice;
 import model.Vektor;
 import model.characters.Characters;
 import model.characters.Hrac;
@@ -53,6 +54,7 @@ public class MainGameControler implements Initializable
 	private ArrayList<Postava> entities;	//nepøátelé
 	private Stage stage;		//jevištì
 	private Map map;			//pozadí, po kterém se pohybujeme
+	private Map map2;
 	private ArrayList<String> input = new ArrayList<String>();	//udržuje informaci o stisknutých klávesách
 	private long last;	//udržuje informaci o tom, kdy probìhl poslední update
 	private long now;	//momentální èas
@@ -242,6 +244,9 @@ public class MainGameControler implements Initializable
 					postava.getAnimatedCharacter().setVelocity(0, 0);
 					postava.getAnimatedCharacter().getPozice().plus(map.getLastChange());
 				}
+				Pozice temp = map2.getPozice();
+				temp.plus(map.getLastChange());
+				map2.setPozice(temp);
 			}
 			private void renderOthers(GraphicsContext gc)
 			{
@@ -320,6 +325,10 @@ public class MainGameControler implements Initializable
 	public void setMap(Map map)
 	{
 		this.map = map;
+	}
+	public void setMap2(Map map)
+	{
+		this.map2 = map;
 	}
 	public Map getMap()
 	{
