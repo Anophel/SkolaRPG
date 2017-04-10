@@ -253,7 +253,6 @@ public class MainGameControler implements Initializable
 						return (int) (p0.getAnimatedCharacter().getPozice().getYPoz()-p1.getAnimatedCharacter().getPozice().getYPoz());
 					}
 				});
-				
 				//vykreslit od menšího k vìtšímu Y
 				for(Postava postava:entities)
 				{
@@ -291,7 +290,6 @@ public class MainGameControler implements Initializable
 			private boolean wontIntersect(double time)
 			{
 				Avatar probe = new Avatar(Characters.HERO);
-				
 				probe.setPozice(avatar.getPozice());
 				probe.setVelocity(avatar.getXvelocity(), -vektor.getY());
 				probe.update(time, canvas);
