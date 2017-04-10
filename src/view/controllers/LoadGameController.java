@@ -1,4 +1,4 @@
-package view;
+package view.controllers;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -102,14 +102,14 @@ public class LoadGameController {
 
 	public void handleUlozit(ActionEvent event) {
 
-		model.Ukladani ukladani = new model.Ukladani();
+		Ukladani ukladani = new Ukladani();
 		ukladani.ulozitHru();
 
 	}
 
 	public void handleNacist(ActionEvent event) {
 
-		model.Ukladani ukladani = new model.Ukladani();
+		Ukladani ukladani = new Ukladani();
 		ukladani.nacistHru();
 
 	}

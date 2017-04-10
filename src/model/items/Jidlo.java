@@ -2,8 +2,7 @@ package model.items;
 
 import javafx.scene.image.ImageView;
 
-public class Jidlo implements INositelne
-{
+public class Jidlo implements INositelne {
 	private static final TypPredmetu TYPPREDMETU = TypPredmetu.JIDLO;
 	private String nazev;
 	private String popis;
@@ -13,9 +12,8 @@ public class Jidlo implements INositelne
 	private ImageView Image;
 	private int trvanlivost = 1;
 	private int rarity;
-	
-	public Jidlo(String nazev, int hodnota, int hodnotaObnovy, String typObnovy, String popis, int rarity)
-	{
+
+	public Jidlo(String nazev, int hodnota, int hodnotaObnovy, String typObnovy, String popis, int rarity) {
 		this.nazev = nazev;
 		this.hodnota = hodnota;
 		this.hodnotaObnovy = hodnotaObnovy;
@@ -23,66 +21,57 @@ public class Jidlo implements INositelne
 		this.popis = popis;
 		this.rarity = rarity;
 	}
-	@Override
-	public String getNazev()
-	{
+
+	public String getNazev() {
 		return nazev;
 	}
-	@Override
-	public TypPredmetu getTypPredmetu()
-	{
+
+	public TypPredmetu getTypPredmetu() {
 		return TYPPREDMETU;
 	}
-	@Override
-	public String getPopis()
-	{
+
+	public String getPopis() {
 		return popis;
 	}
-	@Override
-	public int getHodnota()
-	{
+
+	public int getHodnota() {
 		return hodnota;
 	}
-	public int getHodnotaObnovy()
-	{
+
+	public int getHodnotaObnovy() {
 		return hodnotaObnovy;
 	}
-	public String getTypObnovy()
-	{
+
+	public String getTypObnovy() {
 		return typObnovy;
 	}
+
 	@Override
-	public String toString()
-	{
-		return getNazev()+", "+getPopis();
+	public String toString() {
+		return getNazev() + ", " + getPopis();
 	}
-	@Override
-	public ImageView getObrazek()
-	{
+
+	public ImageView getObrazek() {
 		return Image;
 	}
-	public void setObrazek(ImageView image)
-	{
+
+	public void setObrazek(ImageView image) {
 		Image = image;
 	}
-	@Override
-	public int getTrvanlivost() 
-	{
+
+	public int getTrvanlivost() {
 		return trvanlivost;
 	}
-	@Override
-	public void setTrvanlivost(int trvanlivost) 
-	{
+
+	public void setTrvanlivost(int trvanlivost) {
 		this.trvanlivost = trvanlivost;
 	}
-	@Override
-	public int getPower()
-	{
+
+	public int getPower() {
 		return getHodnotaObnovy();
 	}
-	@Override
-	public int getRarity() 
-	{
+
+	public int getRarity() {
 		return rarity;
 	}
 }
