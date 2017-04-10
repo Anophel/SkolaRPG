@@ -8,25 +8,25 @@
 <?import javafx.scene.layout.HBox?>
 
 <AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <BorderPane prefHeight="800.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <bottom>
-            <HBox prefHeight="59.0" prefWidth="800.0" BorderPane.alignment="CENTER">
-               <children>
-                  <MenuButton alignment="CENTER" mnemonicParsing="false" prefHeight="63.0" prefWidth="177.0" text="Menu">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Load Game" />
-                      <MenuItem mnemonicParsing="false" text="Options" />
-                        <MenuItem mnemonicParsing="false" text="Main Menu" />
-                    </items>
-                  </MenuButton>
-                  <Button fx:id="Inventory" mnemonicParsing="false" onAction="#OpenInventory" prefHeight="63.0" prefWidth="177.0" text="Inventory" />
-               </children>
-            </HBox>
-         </bottom>
-         <center>
-            <AnchorPane fx:id="pane" BorderPane.alignment="CENTER" />
-         </center>
-      </BorderPane>
-   </children>
+	<children>
+		<BorderPane prefHeight="800.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+			<bottom>
+				<HBox prefHeight="59.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+					<children>
+						<MenuButton alignment="CENTER" mnemonicParsing="false" prefHeight="63.0" prefWidth="177.0" text="Menu">
+							<items>
+								<MenuItem fx:id="LoadGame" mnemonicParsing="false" onAction="#handleLoadGame" text="Load Game" />
+								<MenuItem mnemonicParsing="false" text="Options" />
+								<MenuItem mnemonicParsing="false" text="Main Menu" />
+							</items>
+						</MenuButton>
+						<Button fx:id="Inventory" mnemonicParsing="false" onAction="#OpenInventory" prefHeight="63.0" prefWidth="177.0" text="Inventory" />
+					</children>
+				</HBox>
+			</bottom>
+			<center>
+				<AnchorPane fx:id="pane" BorderPane.alignment="CENTER" />
+			</center>
+		</BorderPane>
+	</children>
 </AnchorPane>
