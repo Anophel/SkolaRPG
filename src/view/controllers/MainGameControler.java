@@ -65,8 +65,10 @@ public class MainGameControler implements Initializable {
 	 * READ ME!!!
 	 * 
 	 * 
-	 * Než mì zaèneš používat, nezapomeò na: setHrac(Hrac) - hlavní postava
-	 * setEntities(ArrayList<Postava>) - nepøátelé setMap(Map) - hrací plocha
+	 * Než mì zaèneš používat, nezapomeò na: 
+	 * setHrac(Hrac) - hlavní postava
+	 * setEntities(ArrayList<Postava>) - nepøátelé 
+	 * setMap(Map) - hrací plocha
 	 * setStage(Stage) - okno, do kterého kreslím
 	 */
 
@@ -338,8 +340,6 @@ public class MainGameControler implements Initializable {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/controllers/LoadGame.fxml"));
 		Parent root = loader.load();
 		Scene scene = new Scene(root);
-
-		LoadGameController loadGame = loader.getController();
 
 		Stage stage = new Stage();
 		stage.setScene(scene);

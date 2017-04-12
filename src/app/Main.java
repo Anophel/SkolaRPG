@@ -14,6 +14,7 @@ import model.characters.NPC;
 import model.characters.Postava;
 import view.animation.Avatar;
 import view.animation.Enemy;
+import view.animation.ImageWithSource;
 import view.animation.Map;
 import view.controllers.MainGameControler;
 
@@ -25,7 +26,8 @@ public class Main extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) throws Exception 
+	{
 		Stage jeviste = primaryStage;
 		setJeviste(jeviste);
 
@@ -37,45 +39,33 @@ public class Main extends Application {
 		jeviste.setScene(scene);
 
 		MGC.setScenePane(scene);
-
-		// tvorba hráèe a avatara
+		
 		Hrac hrac = new Hrac();
 		Avatar avatar = new Avatar(Characters.HERO);
-		avatar.setPozice(new Pozice(0, 300));
+		avatar.setPozice(new Pozice(500, 800));
+		avatar.setImageSize(250, 250);
 		hrac.setAnimatedCharacter(avatar);
-
-		// tvorba mapy
-		Map map = new Map();
-		map.setPozice(new Pozice(0, -400));
-
-		// tvorba nepøátel
-		ArrayList<Postava> enemies = new ArrayList<Postava>();
-		// tvorba nepøátel - 1
-		NPC npc = new NPC("Redman");
-		Enemy enemy = new Enemy(Characters.REDMAN);
-		enemy.setPozice(new Pozice(1000, 200));
-		enemy.setImageSize(400, 400);
-		npc.setAnimatedCharacter(enemy);
-		// tvorba nepøátel - 2
-		NPC npc2 = new NPC("Blonde");
-		Enemy enemy2 = new Enemy(Characters.BLONDE);
-		enemy2.setPozice(new Pozice(2900, 100));
-		enemy2.setImageSize(400, 400);
-		npc2.setAnimatedCharacter(enemy2);
-
-		enemies.add(npc);
-		enemies.add(npc2);
-
+		
+		ArrayList<Postava> npc = new ArrayList<>();
+		NPC blonde = new NPC("Blonde");
+		Enemy blondeAnim = new Enemy(Characters.BLONDE);
+		blondeAnim.setPozice(new Pozice(2500, 800));
+		blonde.setAnimatedCharacter(blondeAnim);
+		npc.add(blonde);
+		
+		Map map = new Map(new ImageWithSource("/view/img/chodba.png"), new ImageWithSource("/view/img/pozadi.png"), true);
+		map.setPozice(new Pozice(0, -500));
+		
 		MGC.setHrac(hrac);
 		MGC.setMap(map);
-		MGC.setEntities(enemies);
+		MGC.setEntities(npc);
 		MGC.setStage(jeviste);
 		jeviste.setMaximized(true);
 
 		jeviste.show();
 		MGC.run();
 	}
-
+	
 	private void setJeviste(Stage stage) {
 		this.jeviste = stage;
 	}
