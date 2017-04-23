@@ -13,6 +13,8 @@ public abstract class Animated
 	
 	protected ImageWithSource image;
 	
+	protected double bodyToFeetRatio = 0.85;
+	
 	public void setVelocity(double X, double Y)
 	{
 		this.Xvelocity = X;
@@ -22,6 +24,14 @@ public abstract class Animated
 	{
 		this.Xvelocity += X;
 		this.Yvelocity += Y;
+	}
+	public void setBodyToFeetRatio(double ratio)
+	{
+		this.bodyToFeetRatio = ratio;
+	}
+	public double getBodyToFeetRatio()
+	{
+		return bodyToFeetRatio;
 	}
 	public double getXvelocity()
 	{

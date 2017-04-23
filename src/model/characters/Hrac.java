@@ -19,6 +19,8 @@ public class Hrac extends Postava{
 	private double nikotin;
 	private Pozice pozice;
 	
+	private INositelne vybranyItem;
+	
 	public Hrac()
 	{
 		this(JMENO);
@@ -59,6 +61,14 @@ public class Hrac extends Postava{
 	public void setSytost(double newSytost){this.sytost = newSytost;}
 	public Pozice getPozice(){return pozice;}
 	public void setPozice(Pozice pozice){this.pozice = pozice;}
+	public void setVybranyItem(INositelne item)
+	{
+		this.vybranyItem = item;
+	}
+	public INositelne getVybranyItem()
+	{
+		return vybranyItem;
+	}
 	@Override
 	public double getHP(){return getSytost()+getKofein();}
 	@Override

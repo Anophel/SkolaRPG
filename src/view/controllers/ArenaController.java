@@ -119,6 +119,7 @@ public class ArenaController implements Initializable
 				result.setVisible(true);
 				result.setText("You Won");
 				result.setOnAction(e -> youWon(e));
+				tvojePostava.getBatoh().addAll(nepritel.getBatoh().getObsah());
 			}
 			else
 			{
@@ -139,7 +140,7 @@ public class ArenaController implements Initializable
 			result.setOnAction(e -> youLost(e));
 			vyberZbran.setVisible(false);
 		}
-		else if(nepritel.getBatoh().getObsah().isEmpty())
+		else if(nepritel.getBatohKBoji().getObsah().isEmpty())
 		{
 			Text report = new Text("Nepøítelovy došly zbranì!");
 			textFlow.getChildren().add(report);
@@ -147,10 +148,12 @@ public class ArenaController implements Initializable
 			result.setText("You Won");
 			result.setOnAction(e -> youWon(e));
 			vyberZbran.setVisible(false);
+			tvojePostava.getBatoh().addAll(nepritel.getBatoh().getObsah());
 		}
 	}
 	private void youWon(ActionEvent e)
 	{
+		MGC.setInitialPart(MGC.getLevel().getPartBeingUsed());
 		stage.setScene(MGC.getScene());
 		
 		MGC.run();

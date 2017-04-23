@@ -8,6 +8,9 @@ import model.characters.Characters;
 
 public class Avatar extends AnimatedCharacter
 {
+	private boolean reachedRight;
+	private boolean reachedLeft;
+	
 	public Avatar(ImageWithSource defaultImage) 
 	{
 		super(defaultImage);
@@ -49,8 +52,19 @@ public class Avatar extends AnimatedCharacter
 			return false;
 		}
 	}
+	public boolean getReachedLeft()
+	{
+		return reachedLeft;
+	}
+	public boolean getReachedRight()
+	{
+		return reachedRight;
+	}
 	public void update(double time, Canvas canvas)
 	{
+		reachedLeft = false;
+		reachedRight = false;
+		
 		double oldXpoz = pozice.getXPoz();
 		double oldYpoz = pozice.getYPoz();
 		double centerX = canvas.getWidth()/2 - image.getWidth()/2;
@@ -63,10 +77,12 @@ public class Avatar extends AnimatedCharacter
 		if(newXpoz<=0)
 		{
 			newXpoz = 0;
+			reachedLeft = true;
 		}
 		else if(newXpoz>=(canvas.getWidth()-image.getWidth()))
 		{
 			newXpoz = canvas.getWidth()-image.getWidth();
+			reachedRight = true;
 		}
 		
 		//kontrola, jestli nejsem mimo mapu nahoøe a dole
@@ -98,55 +114,5 @@ public class Avatar extends AnimatedCharacter
 		}
 		
 		pozice = new Pozice(newXpoz,newYpoz);
-	}
-	public void update(Canvas canvas)
-	{
-		double centerX = canvas.getWidth()/2 - image.getWidth()/2;
-		double centerY = canvas.getHeight()/2 - image.getHeight()/2;
-		
-		double X = 0;
-		double Y = 0;
-		
-		if(outOfCenterX(canvas) && outOfCenterY(canvas))
-		{
-			X = pozice.getXPoz();
-			Y = pozice.getYPoz();
-		}
-		else if(outOfCenterX(canvas))
-		{
-			X = pozice.getXPoz();
-			Y = centerY;
-		}
-		else if(outOfCenterY(canvas))
-		{
-			X = centerX;
-			Y = pozice.getYPoz();
-		}
-		else
-		{
-			X = centerX;
-			Y = centerY;
-		}
-		
-		//poslední kontrola, jestli jsem se nedostal mimo okno
-		if(X<=0)
-		{
-			X = 0;
-		}
-		else if(X>=(canvas.getWidth()-image.getWidth()))
-		{
-			X = canvas.getWidth()-image.getWidth();
-		}
-		
-		if(Y<=0)
-		{
-			Y = 0;
-		}
-		else if(Y>=(canvas.getHeight()-image.getHeight()))
-		{
-			Y = canvas.getHeight()-image.getHeight();
-		}
-		
-		pozice = new Pozice(X,Y);
 	}
 }

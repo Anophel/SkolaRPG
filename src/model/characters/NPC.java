@@ -17,7 +17,7 @@ public class NPC extends Postava
 	}
 	public NPC(String jmeno)
 	{
-		this(jmeno, new Batoh(1));
+		this(jmeno, new Batoh(10));
 	}
 	public NPC(String jmeno, Batoh batoh)
 	{
@@ -28,6 +28,12 @@ public class NPC extends Postava
 		super(jmeno,batoh);
 		this.HP = HP;
 	}
+	public NPC(NPCs npc)
+	{
+		super(npc.getJmeno(),npc.getAnimatedCharacter(), npc.getKlic());
+		this.HP = defHP;
+	}
+	
 	@Override
 	public double getHP(){return HP;}
 	public void setHP(double HP){this.HP = HP;}

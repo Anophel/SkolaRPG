@@ -100,20 +100,6 @@ public class LoadGameController {
 
 	}
 
-	public void handleUlozit(ActionEvent event) {
-
-		Ukladani ukladani = new Ukladani();
-		ukladani.ulozitHru();
-
-	}
-
-	public void handleNacist(ActionEvent event) {
-
-		Ukladani ukladani = new Ukladani();
-		ukladani.nacistHru();
-
-	}
-
 	public void handleZpet(ActionEvent event) throws Exception {
 		Stage podium = new Stage();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainMenu.fxml"));

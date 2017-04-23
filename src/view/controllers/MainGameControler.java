@@ -19,15 +19,19 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Pozice;
 import model.Vektor;
 import model.characters.Characters;
 import model.characters.Hrac;
 import model.characters.Postava;
 import model.items.INositelne;
 import view.animation.Avatar;
+import view.animation.Level;
 import view.animation.Map;
+import view.animation.levels.Part;
 
-public class MainGameControler implements Initializable {
+public class MainGameControler implements Initializable 
+{
 	@FXML
 	private MenuButton Menu;
 
@@ -47,35 +51,28 @@ public class MainGameControler implements Initializable {
 	private AnchorPane pane;
 
 	private Hrac hrac; // hlavní postava
-	private ArrayList<Postava> entities; // nepøátelé
 	private Stage stage; // jevištì
-	private Map map; // pozadí, po kterém se pohybujeme
-	private ArrayList<String> input = new ArrayList<String>(); // udržuje
-																// informaci o
-																// stisknutých
-																// klávesách
+	private ArrayList<String> input = new ArrayList<String>(); // udržuje informaci o stisknutých klávesách
 	private long last; // udržuje informaci o tom, kdy probìhl poslední update
 	private long now; // momentální èas
 	private Canvas canvas = new Canvas(); // slouží jako plátno pro vykreslování
-	private Vektor vektor = new Vektor(0, 0); // popisuje smìr pohybu mapy
-
 	private Scene scene;
+	private Part initialPart = Part.LEFT;
 
+	
+	private Level level;
 	/*
 	 * READ ME!!!
 	 * 
 	 * 
 	 * Než mì zaèneš používat, nezapomeò na: 
 	 * setHrac(Hrac) - hlavní postava
-	 * setEntities(ArrayList<Postava>) - nepøátelé 
-	 * setMap(Map) - hrací plocha
+	 * setLevel(Level) - informace o mapách a nepøátelích
 	 * setStage(Stage) - okno, do kterého kreslím
 	 */
 
-	public void run() {
-		pane.applyCss();
-		pane.layout();
-
+	public void run() 
+	{
 		pane.getChildren().clear();
 		pane.getChildren().add(canvas);
 
@@ -92,9 +89,15 @@ public class MainGameControler implements Initializable {
 		canvas.setWidth(pane.getWidth());
 		canvas.setHeight(pane.getHeight());
 
-		new AnimationTimer() {
+		new AnimationTimer() 
+		{
+			Map map = level.getMap(initialPart);	//mapa, po které se pohybujeme
+			ArrayList<Postava> entities = level.getEnemies(initialPart);	//nepøátelé
+			Vektor vektor = new Vektor(0, 0); // popisuje smìr pohybu mapy
+			
 			@Override
-			public void handle(long present) {
+			public void handle(long present) 
+			{
 				now = System.nanoTime();
 
 				canvas.setWidth(pane.getWidth());
@@ -108,13 +111,7 @@ public class MainGameControler implements Initializable {
 				setAnimation(ubehlyCas); // nastavení animace
 
 				setAvatarVelocity(ubehlyCas); // nastaví rychlost avatara
-
-				// aplikace zmìn avatara
-				if (avatar.getXvelocity() != 0 || avatar.getYvelocity() != 0) {
-					avatar.update(ubehlyCas, canvas);
-				} else {
-					avatar.update(canvas);
-				}
+				avatar.update(ubehlyCas, canvas); // aplikace zmìn avatara
 
 				setMapVelocity(); // pøípadná úprava rychlosti mapy
 				map.update(ubehlyCas, canvas); // aplikace zmìn mapy
@@ -129,79 +126,88 @@ public class MainGameControler implements Initializable {
 
 				// intersects - start action
 				intersectionsAndActions();
+				
+				changeMap();
 			}
 
-			private void setVelocity() // nastavuje rychlost podle stisknutých
-										// kláves
+			private void setVelocity() // nastavuje rychlost podle stisknutých kláves
 			{
 				vektor.set(new Vektor(0, 0));
-				if (input.contains("A")) {
+				if (input.contains("A")) 
+				{
 					vektor.addX(8);
 				}
-				if (input.contains("D")) {
+				if (input.contains("D")) 
+				{
 					vektor.addX(-8);
 				}
-				if (input.contains("W")) {
+				if (input.contains("W")) 
+				{
 					vektor.addY(8);
 				}
-				if (input.contains("S")) {
+				if (input.contains("S")) 
+				{
 					vektor.addY(-8);
 				}
 			}
 
-			private void setAnimation(double ubehlyCas) // nastaví animaci
-														// avatara
+			private void setAnimation(double ubehlyCas) // nastaví animaci avatara
 			{
 				if (vektor.getX() != 0) // pokud se hýbe po X
 				{
 					if (vektor.getX() > 0) // pokud se hýbe smìrem vlevo
 					{
 						avatar.left(ubehlyCas);
-					} else // hýbe se vpravo
+					}
+					else // hýbe se vpravo
 					{
 						avatar.right(ubehlyCas);
 					}
-				} else if (vektor.getY() != 0) // pokud se hýbe po Y
+				} 
+				else if (vektor.getY() != 0) // pokud se hýbe po Y
 				{
 					if (vektor.getY() > 0) // pohybuje se nahoru
 					{
 						avatar.up(ubehlyCas);
-					} else // pohybuje se dolu
+					} 
+					else // pohybuje se dolu
 					{
 						avatar.down(ubehlyCas);
 					}
-				} else // nehýbe se vùbec
+				}
+				else // nehýbe se vùbec
 				{
 					avatar.relax(ubehlyCas);
 				}
 			}
 
-			private void setAvatarVelocity(double time) // nastaví rychlost
-														// avataru
+			private void setAvatarVelocity(double time) // nastaví rychlost avataru
 			{
 				avatar.setVelocity(0, 0);
 
-				if (map.getXborderHit()) {
+				if (map.getXborderHit()) 
+				{
 					avatar.addVelocity(-vektor.getX(), 0);
 				}
-				if (map.getYborderHit()) {
+				if (map.getYborderHit()) 
+				{
 					avatar.addVelocity(0, -vektor.getY());
 				}
-				if (map.intersectsWithBackground(avatar)) // pokud se protne
-															// pozadí s avatarem
+				if (map.intersectsWithBackground(avatar)) // pokud se protne pozadí s avatarem
 				{
-					if (vektor.getY() > 0) // pokud se pohybuje mapa smìrem dolù
-											// = avatar nahoru
+					if (vektor.getY() > 0) // pokud se pohybuje mapa smìrem dolù = avatar nahoru
 					{
 						avatar.setVelocity(avatar.getXvelocity(), vektor.getY());
 					}
 				}
 
-				if (avatar.outOfCenterX(canvas) && !map.getXborderHit()) {
+				if (avatar.outOfCenterX(canvas) && !map.getXborderHit()) 
+				{
 					avatar.setVelocity(-vektor.getX(), avatar.getYvelocity());
 				}
 				if (avatar.outOfCenterY(canvas) && vektor.getY() > 0 && !map.intersectsWithBackground(avatar)
-						&& wontIntersect(time)) {
+						&& wontIntersect(time)) 
+				{
 					avatar.setVelocity(avatar.getXvelocity(), -vektor.getY());
 				}
 			}
@@ -209,26 +215,34 @@ public class MainGameControler implements Initializable {
 			private void setMapVelocity() // nastaví rychlost mapì
 			{
 				map.setVelocity(vektor.getX(), vektor.getY());
-				if (avatar.outOfCenterX(canvas)) {
+				if (avatar.outOfCenterX(canvas)) 
+				{
 					map.setVelocity(0, vektor.getY());
 				}
-				if (avatar.outOfCenterY(canvas)) {
-					if (vektor.getY() > 0) {
+				if (avatar.outOfCenterY(canvas)) 
+				{
+					if (vektor.getY() > 0) 
+					{
 						map.setVelocity(map.getXvelocity(), 0);
-					} else if (vektor.getY() < 0 && !map.getXborderHit()) {
+					}
+					else if (vektor.getY() < 0 && !map.getXborderHit())
+					{
 						map.setVelocity(map.getXvelocity(), vektor.getY());
 					}
 				}
 			}
 
-			private void updateOthers(double time) {
-				for (Postava postava : entities) {
+			private void updateOthers(double time) 
+			{
+				for (Postava postava : entities) 
+				{
 					postava.getAnimatedCharacter().setVelocity(0, 0);
 					postava.getAnimatedCharacter().getPozice().plus(map.getLastChange());
 				}
 			}
 
-			private void renderOthers(GraphicsContext gc) {
+			private void renderOthers(GraphicsContext gc)
+			{
 				// utøídit podle Y
 				entities.sort(new Comparator<Postava>() {
 					@Override
@@ -238,43 +252,101 @@ public class MainGameControler implements Initializable {
 					}
 				});
 				// vykreslit od menšího k vìtšímu Y
-				for (Postava postava : entities) {
+				for (Postava postava : entities) 
+				{
 					postava.getAnimatedCharacter().render(gc);
 				}
 			}
-
-			private void intersectionsAndActions() {
+			
+			private void intersectionsAndActions() 
+			{
 				boolean intersected = false;
 				Postava intersectionist = null;
 				@SuppressWarnings("unchecked")
 				ArrayList<Postava> temp = (ArrayList<Postava>) entities.clone();
-				for (Postava postava : temp) {
-					if (avatar.intersectsWith(postava.getAnimatedCharacter())) {
+				for (Postava postava : temp) 
+				{
+					if (avatar.intersectsWith(postava.getAnimatedCharacter())) 
+					{
 						intersected = true;
-						try {
+						try 
+						{
 							startFight(hrac, postava);
 							intersectionist = postava;
 							stop();
-						} catch (Exception e) {
+						} 
+						catch (Exception e)
+						{
 							e.printStackTrace();
 						}
 					}
 				}
-				if (intersected) {
+				if (intersected) 
+				{
 					entities.remove(intersectionist);
 				}
 			}
 
-			private boolean wontIntersect(double time) {
+			private boolean wontIntersect(double time) 
+			{
 				Avatar probe = new Avatar(Characters.HERO);
 				probe.setPozice(avatar.getPozice());
 				probe.setVelocity(avatar.getXvelocity(), -vektor.getY());
 				probe.update(time, canvas);
 
-				if (map.intersectsWithBackground(probe)) {
+				if (map.intersectsWithBackground(probe))
+				{
 					return false;
-				} else {
+				} 
+				else 
+				{
 					return true;
+				}
+			}
+		
+			private void changeMap()
+			{
+				/*
+				 * Pokud mapa dorazila na konec a nacházím se na levé èásti levelu a avatar došel až do prava,
+				 * zmìním mapu na pravou èást.
+				 */
+				if(level.getPartBeingUsed() == Part.LEFT && avatar.getReachedRight() && hrac.getBatoh().includes(level.getLeftMapReleaseKey()))
+				{
+					double oldX = level.getRightMap().getPozice().getXPoz();
+					double oldY = level.getRightMap().getPozice().getYPoz();
+					
+					level.getRightMap().setPozice(new Pozice(0, map.getPozice().getYPoz()));
+					map = level.getRightMap();
+					level.setPartBeingUsed(Part.RIGHT);
+					avatar.setPozice(new Pozice(50, avatar.getPozice().getYPoz()));
+					entities = level.getRightMapEnemies();
+					
+					double Xdiference = map.getPozice().getXPoz() - oldX;
+					double Ydiference = map.getPozice().getYPoz() - oldY;
+					
+					for(Postava postava:entities)
+					{
+						postava.getAnimatedCharacter().setPozice(new Pozice(postava.getAnimatedCharacter().getPozice().getXPoz()+Xdiference,postava.getAnimatedCharacter().getPozice().getYPoz()+Ydiference));
+					}
+				}
+				else if (level.getPartBeingUsed() == Part.RIGHT && avatar.getReachedLeft())
+				{
+					double oldX = level.getLeftMap().getPozice().getXPoz();
+					double oldY = level.getLeftMap().getPozice().getYPoz();
+					
+					level.getLeftMap().setPozice(new Pozice(-level.getLeftMap().getImage().getWidth(), map.getPozice().getYPoz()));
+					map = level.getLeftMap();
+					level.setPartBeingUsed(Part.LEFT);
+					avatar.setPozice(new Pozice(canvas.getWidth()-(avatar.getImage().getWidth()+50),avatar.getPozice().getYPoz()));
+					entities = level.getLeftMapEnemies();
+					
+					double Xdiference = map.getPozice().getXPoz() - oldX;
+					double Ydiference = map.getPozice().getYPoz() - oldY;
+					
+					for(Postava postava:entities)
+					{
+						postava.getAnimatedCharacter().setPozice(new Pozice(postava.getAnimatedCharacter().getPozice().getXPoz()+Xdiference,postava.getAnimatedCharacter().getPozice().getYPoz()+Ydiference));
+					}
 				}
 			}
 		}.start();
@@ -283,23 +355,19 @@ public class MainGameControler implements Initializable {
 	public void setHrac(Hrac hrac) {
 		this.hrac = hrac;
 	}
-
-	public void setEntities(ArrayList<Postava> entities) {
-		this.entities = entities;
+	
+	public void setInitialPart(Part part)
+	{
+		initialPart = part;
 	}
-
-	public ArrayList<Postava> getEntities() {
-		return entities;
+	public void setLevel(Level lvl)
+	{
+		level = lvl;
 	}
-
-	public void setMap(Map map) {
-		this.map = map;
+	public Level getLevel()
+	{
+		return level;
 	}
-
-	public Map getMap() {
-		return map;
-	}
-
 	public void setStage(Stage stage) {
 		this.stage = stage;
 	}
@@ -308,9 +376,7 @@ public class MainGameControler implements Initializable {
 		return stage;
 	}
 
-	public void OpenInventory(ActionEvent event) throws Exception // handler pro
-																	// tlaèítko
-																	// Inventory
+	public void OpenInventory(ActionEvent event) throws Exception // handler pro tlaèítko Inventory
 	{
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/controllers/InventarView.fxml"));
 		Parent root = loader.load();
@@ -330,7 +396,7 @@ public class MainGameControler implements Initializable {
 		// získání vybraného itemu
 		INositelne item = inventar.getVybranyItem();
 		try {
-			System.out.println(item.toString());
+			hrac.setVybranyItem(item);
 		} catch (NullPointerException e) {
 			System.out.println("Uživatel nic nevybral!");
 		}
@@ -347,7 +413,8 @@ public class MainGameControler implements Initializable {
 
 	}
 
-	private void startFight(Postava me, Postava enemy) throws Exception {
+	private void startFight(Postava me, Postava enemy) throws Exception 
+	{
 		input.clear();
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/controllers/Arena.fxml"));

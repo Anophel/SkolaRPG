@@ -1,7 +1,5 @@
 package app;
 
-import java.util.ArrayList;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,12 +8,9 @@ import javafx.stage.Stage;
 import model.Pozice;
 import model.characters.Characters;
 import model.characters.Hrac;
-import model.characters.NPC;
-import model.characters.Postava;
 import view.animation.Avatar;
-import view.animation.Enemy;
-import view.animation.ImageWithSource;
-import view.animation.Map;
+import view.animation.Level;
+import view.animation.levels.Levels;
 import view.controllers.MainGameControler;
 
 public class Main extends Application {
@@ -43,22 +38,12 @@ public class Main extends Application {
 		Hrac hrac = new Hrac();
 		Avatar avatar = new Avatar(Characters.HERO);
 		avatar.setPozice(new Pozice(500, 800));
-		avatar.setImageSize(250, 250);
+		avatar.setImageSize(400, 400);
 		hrac.setAnimatedCharacter(avatar);
 		
-		ArrayList<Postava> npc = new ArrayList<>();
-		NPC blonde = new NPC("Blonde");
-		Enemy blondeAnim = new Enemy(Characters.BLONDE);
-		blondeAnim.setPozice(new Pozice(2500, 800));
-		blonde.setAnimatedCharacter(blondeAnim);
-		npc.add(blonde);
-		
-		Map map = new Map(new ImageWithSource("/view/img/chodba.png"), new ImageWithSource("/view/img/pozadi.png"), true);
-		map.setPozice(new Pozice(0, -500));
 		
 		MGC.setHrac(hrac);
-		MGC.setMap(map);
-		MGC.setEntities(npc);
+		MGC.setLevel(new Level(Levels.LEVEL_1));
 		MGC.setStage(jeviste);
 		jeviste.setMaximized(true);
 

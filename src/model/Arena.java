@@ -27,7 +27,7 @@ public class Arena
 	public boolean fight()
 	{
 		INositelne tvujItem = getVybranyItem(); //uložím item hráèe
-		INositelne nepriteluvItem = nepritel.getBatoh().getObsah().get(random.nextInt(nepritel.getBatoh().getObsah().size()));
+		INositelne nepriteluvItem = nepritel.getBatohKBoji().getObsah().get(random.nextInt(nepritel.getBatohKBoji().getObsah().size()));
 		boolean obaNazivu = true;
 		try
 		{

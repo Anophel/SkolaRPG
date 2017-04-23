@@ -1,6 +1,7 @@
 package model.items;
 
 import javafx.scene.image.ImageView;
+import model.items.generator.KlicDruhy;
 
 public class Klic implements INositelne {
 	private static final TypPredmetu TYPPREDMETU = TypPredmetu.KLIC;
@@ -18,7 +19,10 @@ public class Klic implements INositelne {
 		this.IDDveri = IDDveri;
 		this.popis = popis;
 	}
-
+	public Klic(KlicDruhy klic)
+	{
+		this(klic.getNazev(), klic.getHodnota(), klic.getID(), klic.getPopis());
+	}
 	public int getIDDveri() {
 		return IDDveri;
 	}

@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import model.Pozice;
 import model.Vektor;
 import view.animation.ImageWithSource;
+import view.animation.levels.Maps;
 import view.animation.Animated;
 
 public class Map extends Animated
@@ -18,8 +19,8 @@ public class Map extends Animated
 	
 	private Vektor lastChange = new Vektor(0,0);
 	
-	private static final ImageWithSource IMAGE = new ImageWithSource("/view/img/chodba.png");
-	private static final ImageWithSource POZADI = new ImageWithSource("/view/img/pozadi.png");
+	private static final ImageWithSource IMAGE = new ImageWithSource("/view/img/maps/chodba1.png");
+	private static final ImageWithSource POZADI = new ImageWithSource("/view/img/maps/pozadi1.png");
 	private static final boolean VODOROVNE = true;
 	private static final Pozice POZICE = new Pozice(0,0);
 	
@@ -29,6 +30,10 @@ public class Map extends Animated
 	public Map()
 	{
 		this(IMAGE, POZADI, VODOROVNE);
+	}
+	public Map(Maps map)
+	{
+		this(map.getImage(), map.getPozadi(), map.getVodorovne(), map.getPozice());
 	}
 	public Map(ImageWithSource image, ImageWithSource pozadi, boolean vodorovnePozadi)
 	{
@@ -108,7 +113,7 @@ public class Map extends Animated
 	{
 		if(vodorovne)
 		{
-			if(animated.getPozice().getYPoz()<(pozice.getYPoz()+pozadi.getHeight()))
+			if((animated.getPozice().getYPoz()+animated.getImage().getHeight()*animated.getBodyToFeetRatio())<(pozice.getYPoz()+pozadi.getHeight()))
 			{
 				return true;
 			}
