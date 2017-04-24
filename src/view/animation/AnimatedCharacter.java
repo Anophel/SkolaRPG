@@ -2,9 +2,10 @@ package view.animation;
 
 import java.util.ArrayList;
 
+import javafx.scene.canvas.Canvas;
 import model.characters.Characters;
 
-public abstract class AnimatedCharacter extends Animated
+public class AnimatedCharacter extends Animated
 {
 	private ArrayList<ImageWithSource> relaxSeq = new ArrayList<ImageWithSource>();
 	private ArrayList<ImageWithSource> leftSeq = new ArrayList<ImageWithSource>();
@@ -16,8 +17,10 @@ public abstract class AnimatedCharacter extends Animated
 	protected Status status;
 	
 	private static final double delay = 15; //mezera mezi kroky animace
+
 	private double lastTime = 0;
 	
+	private Characters character = null;
 	
 	
 	public AnimatedCharacter(ImageWithSource defaultImage)
@@ -36,14 +39,10 @@ public abstract class AnimatedCharacter extends Animated
 	}
 	public AnimatedCharacter(Characters character)
 	{
-		this.image = character.getImage();
-		this.relaxSeq = character.getRelax();
-		this.leftSeq = character.getLeft();
-		this.rightSeq = character.getRight();
-		this.upSeq = character.getUp();
-		this.downSeq = character.getDown();
+		this(character.getImage(), character.getRelax(), character.getLeft(), character.getRight(), 
+				character.getUp(), character.getDown());
+		this.character = character;
 	}
-	
 	
 	public void setRelaxSeq(ArrayList<ImageWithSource> imgs)
 	{
@@ -262,5 +261,14 @@ public abstract class AnimatedCharacter extends Animated
 			down.add(new ImageWithSource(url,width,height,true,true));
 		}
 		this.downSeq = down;
+	}
+	public Characters getCharacter() 
+	{
+		return character;
+	}
+	@Override
+	public void update(double time, Canvas canvas) 
+	{
+
 	}
 }

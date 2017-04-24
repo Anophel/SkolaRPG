@@ -2,7 +2,6 @@ package view.animation;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import model.Pozice;
 
 public abstract class Animated 
@@ -14,6 +13,8 @@ public abstract class Animated
 	
 	protected ImageWithSource image;
 	
+	protected double bodyToFeetRatio = 0.85;
+	
 	public void setVelocity(double X, double Y)
 	{
 		this.Xvelocity = X;
@@ -23,6 +24,14 @@ public abstract class Animated
 	{
 		this.Xvelocity += X;
 		this.Yvelocity += Y;
+	}
+	public void setBodyToFeetRatio(double ratio)
+	{
+		this.bodyToFeetRatio = ratio;
+	}
+	public double getBodyToFeetRatio()
+	{
+		return bodyToFeetRatio;
 	}
 	public double getXvelocity()
 	{
@@ -48,7 +57,7 @@ public abstract class Animated
 	{
 		this.image = new ImageWithSource(URL);
 	}
-	public Image getImage()
+	public ImageWithSource getImage()
 	{
 		return image;
 	}
@@ -77,7 +86,7 @@ public abstract class Animated
 		Pozice D = new Pozice(pozice.getXPoz()+image.getWidth(),pozice.getYPoz()+image.getHeight());
 		
 		Pozice OthPoz = other.getPozice();
-		Image OthImg = other.getImage();
+		ImageWithSource OthImg = other.getImage();
 		Pozice E = OthPoz;
 		Pozice F = new Pozice(OthPoz.getXPoz()+OthImg.getWidth(),OthPoz.getYPoz());
 		Pozice G = new Pozice(OthPoz.getXPoz(),OthPoz.getYPoz()+OthImg.getHeight());

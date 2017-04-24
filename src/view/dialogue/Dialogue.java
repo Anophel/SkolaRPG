@@ -14,7 +14,10 @@ import org.w3c.dom.NodeList;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.AnchorPane;
 import model.characters.Characters;
+import model.characters.Postava;
+import view.controllers.MainGameControler;
 
 public class Dialogue extends Canvas{
 	
@@ -31,7 +34,11 @@ public class Dialogue extends Canvas{
 	private ArrayList<Speech> speeches = new ArrayList<Speech>();
 	private AnimationTimer timer;
 	
-	public Dialogue(Dialogues dial, int width, int height){
+	private MainGameControler mgc;
+	private boolean running = false;
+	private Postava enemy;
+	
+	public Dialogue(Dialogues dial, int width, int height, MainGameControler mgc, Postava enemy){
 		super(width, height);
 		try {
 	         File inputFile = new File(dial.getPath());
@@ -77,18 +84,35 @@ public class Dialogue extends Canvas{
 						text = renderSpeech(index);
 						index++;
 					} else {
+						running = false;
 						this.stop();
+						try {
+							mgc.startFight(mgc.getHrac(), enemy);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
 		};
+		
+		this.mgc = mgc;
 	}
 	
 	public void start(){
+		running = true;
 		timer.start();
 	}
 	
+	// GIT
 	private RunningText renderSpeech(int index){
+		if(index == (speeches.size()-1)){
+			this.setOnMouseClicked((e)->{
+				AnchorPane pane = (AnchorPane) this.getParent();
+				pane.getChildren().remove(this);
+				pane.setDisable(true);
+			});
+		}
 		return this.renderSpeech(speeches.get(index));
 	}
 	
@@ -99,5 +123,9 @@ public class Dialogue extends Canvas{
 		gc.drawImage(speech.getAvatar(), xAvatar, yAvatar, super.getWidth() * percentAvatarWidth, super.getHeight() * percentAvatarHeight);
 		text.start();
 		return text;
+	}
+	
+	public boolean isRunning(){
+		return running;
 	}
 }

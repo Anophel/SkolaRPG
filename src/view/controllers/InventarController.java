@@ -124,6 +124,15 @@ public class InventarController implements Initializable
 			tlacitko.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> setVybraneOstatni(item));
 			ostatniTilePane.getChildren().add(tlacitko);
 		}
+		for(INositelne item:batoh.getKlice())
+		{
+			TlacitkoInventare tlacitko = new TlacitkoInventare();
+			tlacitko.setItem(item);
+			tlacitko.setMinHeight(120);
+			tlacitko.setMinWidth(120);
+			tlacitko.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> setVybraneOstatni(item));
+			ostatniTilePane.getChildren().add(tlacitko);
+		}
 		if(vzestupne)
 		{
 			sort1.setText("Seøaï vzestupnì");

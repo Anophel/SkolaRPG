@@ -5,78 +5,121 @@ import java.util.Collections;
 import java.util.Comparator;
 import model.items.INositelne;
 import model.items.Jidlo;
+import model.items.Klic;
 import model.items.Odpad;
 import model.items.Zbran;
 import model.items.generator.Generator;
 
-public class Batoh 
-{
+public class Batoh {
 	private ArrayList<INositelne> obsah = new ArrayList<INositelne>();
 	private static int I = 0;
-	
-	public Batoh()
-	{
+
+	public Batoh() {
 		this(I);
 	}
-	public Batoh(int i)
-	{
+
+	public Batoh(int i) {
 		Generator gen = new Generator();
 		this.addAll(gen.generujBatoh(i));
 	}
-	public void add(INositelne item)
-	{
+
+	public void add(INositelne item) {
 		getObsah().add(item);
 	}
-	public void addAll(ArrayList<INositelne> itemy)
-	{
+
+	public void addAll(ArrayList<INositelne> itemy) {
 		getObsah().addAll(itemy);
 	}
-	public ArrayList<INositelne> getObsah()
-	{
+
+	public ArrayList<INositelne> getObsah() {
 		return obsah;
 	}
-	public ArrayList<INositelne> getZbrane()
+
+	public ArrayList<INositelne> getZbrane() 
 	{
 		ArrayList<INositelne> zbrane = new ArrayList<INositelne>();
-		for(INositelne item:getObsah())
+		for (INositelne item : getObsah()) 
 		{
-			if(item instanceof Zbran)
+			if (item instanceof Zbran) 
 			{
 				zbrane.add(item);
 			}
 		}
 		return zbrane;
 	}
-	public ArrayList<INositelne> getJidlo()
+
+	public ArrayList<INositelne> getJidlo() 
 	{
 		ArrayList<INositelne> jidlo = new ArrayList<INositelne>();
-		for(INositelne item:getObsah())
+		for (INositelne item : getObsah()) 
 		{
-			if(item instanceof Jidlo)
+			if (item instanceof Jidlo) 
 			{
 				jidlo.add(item);
 			}
 		}
 		return jidlo;
 	}
-	public ArrayList<INositelne> getOdpad()
+
+	public ArrayList<INositelne> getOdpad() 
 	{
 		ArrayList<INositelne> odpad = new ArrayList<INositelne>();
-		for(INositelne item:getObsah())
+		for (INositelne item : getObsah()) 
 		{
-			if(item instanceof Odpad)
+			if (item instanceof Odpad) 
 			{
 				odpad.add(item);
 			}
 		}
 		return odpad;
 	}
-	public void sortByPower(boolean vzestupne)
+	
+	public ArrayList<INositelne> getKlice() 
+	{
+		ArrayList<INositelne> klice = new ArrayList<INositelne>();
+		for (INositelne item : getObsah()) 
+		{
+			if (item instanceof Klic) 
+			{
+				klice.add(item);
+			}
+		}
+		return klice;
+	}
+
+	public void sortByPower(boolean vzestupne) 
 	{
 		getObsah().sort(Comparator.comparing(INositelne::getPower));
-		if(vzestupne)
+		if(vzestupne) 
 		{
 			Collections.reverse(getObsah());
+		}
+	}
+	
+	public boolean includes(INositelne hledany)
+	{
+		boolean found = false;
+		for(INositelne item: getObsah())
+		{
+			if(found)
+			{
+				return true;
+			}
+			else
+			{
+				if(item.getNazev() == hledany.getNazev())
+				{
+					found = true;
+				}
+			}
+		}
+		if(found)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 }
